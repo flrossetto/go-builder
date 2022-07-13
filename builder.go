@@ -152,7 +152,7 @@ func (b *{{$struct.Name}}Builder) Clear{{$field.Name | title}}() *{{$struct.Name
 	return b
 }
 
-func (b *{{$struct.Name}}Builder) Add{{$field.Name | title}}(value {{sliceType $field}}) *{{$struct.Name}}Builder {
+func (b *{{$struct.Name}}Builder) Add{{$field.Name | singular | title}}(value {{sliceType $field}}) *{{$struct.Name}}Builder {
 	b.x{{$field.Name}} = append(b.x{{$field.Name}}, value)
 	return b
 }

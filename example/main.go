@@ -45,7 +45,7 @@ func useNewBuilder() *Person {
 				Number(99).
 				Build(),
 		).
-		AddEmails(NewEmailBuilder().
+		AddEmail(NewEmailBuilder().
 			Name("email").
 			Address("email@example.com").
 			Build(),
