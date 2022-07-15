@@ -5,6 +5,7 @@ go 1.18
 require (
 	github.com/gertd/go-pluralize v0.2.1
 	github.com/jinzhu/copier v0.3.5
+	github.com/stoewer/go-strcase v1.2.0
 	golang.org/x/tools v0.1.11
 )
 

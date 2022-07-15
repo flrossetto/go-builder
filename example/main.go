@@ -10,6 +10,10 @@ type Email struct {
 	Address string
 }
 
+func (e *Email) GetName() string {
+	return e.Name
+}
+
 type Address struct {
 	Street string
 	Number int

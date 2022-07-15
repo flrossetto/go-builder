@@ -4,6 +4,7 @@ type Package struct {
 	FileName   []string
 	Package    string
 	Structures []*Struct
+	Funcs      []*StructFunc
 }
 
 type Struct struct {
@@ -17,4 +18,9 @@ type Field struct {
 	Slice    bool
 	KindName string
 	KindPkg  string
+}
+
+type StructFunc struct {
+	Struct string
+	Name   string
 }

@@ -19,6 +19,8 @@ func readAllFile(dir string) (*Package, error) {
 	fset := token.NewFileSet()
 	pkg := Package{}
 
+	var files []*ast.File
+
 loopFile:
 	for _, file := range dirFiles {
 		if file.IsDir() || !strings.HasSuffix(file.Name(), ".go") {
@@ -43,8 +45,17 @@ loopFile:
 
 		pkg.FileName = append(pkg.FileName, file.Name())
 		pkg.Package = ff.Name.Name
+		files = append(files, ff)
+	}
 
-		if err := readFiles(fset, ff, &pkg); err != nil {
+	for _, ff := range files {
+		if err := readFuncs(fset, ff, &pkg); err != nil {
+			return nil, err
+		}
+	}
+
+	for _, ff := range files {
+		if err := readStructures(fset, ff, &pkg); err != nil {
 			return nil, err
 		}
 	}
@@ -52,7 +63,36 @@ loopFile:
 	return &pkg, nil
 }
 
-func readFiles(fset *token.FileSet, file *ast.File, pkg *Package) error {
+func readFuncs(fset *token.FileSet, file *ast.File, pkg *Package) error {
+	for _, d := range file.Decls {
+		funcDecl, ok := d.(*ast.FuncDecl)
+		if !ok || funcDecl.Recv == nil || funcDecl.Name == nil {
+			continue
+		}
+
+		if len(funcDecl.Recv.List) == 0 {
+			continue
+		}
+
+		tp, ok := funcDecl.Recv.List[0].Type.(*ast.StarExpr)
+		if !ok {
+			continue
+		}
+
+		x, ok := tp.X.(*ast.Ident)
+		if !ok {
+			continue
+		}
+
+		pkg.Funcs = append(pkg.Funcs, &StructFunc{
+			Name:   funcDecl.Name.Name,
+			Struct: x.Name,
+		})
+	}
+	return nil
+}
+
+func readStructures(fset *token.FileSet, file *ast.File, pkg *Package) error {
 	for _, o := range file.Scope.Objects {
 		structType := getStructType(o)
 		if structType == nil {
