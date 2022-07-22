@@ -5,9 +5,22 @@ import (
 	"fmt"
 )
 
+type AddressType string
+
+type EmailType int
+
+const (
+	PrimaryEmail EmailType = iota
+	PersonalEmail
+)
+
+type EmptyStruct struct{}
+
 type Email struct {
-	Name    string
-	Address string
+	Name      string
+	Address   AddressType
+	EmailType EmailType
+	Types     []EmailType
 }
 
 func (e *Email) GetName() string {
@@ -19,10 +32,12 @@ type Address struct {
 	Number int
 }
 
+type PersonAddress Address
+
 type Person struct {
 	ID      int64
 	Name    string
-	Address *Address
+	Address *PersonAddress
 	Emails  []*Email
 }
 
@@ -44,7 +59,7 @@ func useNewBuilder() *Person {
 		ID(10).
 		Name("person").
 		Address(
-			NewAddressBuilder().
+			NewPersonAddressBuilder().
 				Street("street").
 				Number(99).
 				Build(),
@@ -66,7 +81,7 @@ func useToBuilder(person1 *Person) {
 	person2 := person1.ToBuilder().
 		ID(5).
 		Name("changed").
-		AddressFunc(func(a *Address) *Address {
+		AddressFunc(func(a *PersonAddress) *PersonAddress {
 			return a.ToBuilder().
 				Street("changed").
 				Number(55).

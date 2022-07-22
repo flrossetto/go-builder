@@ -100,7 +100,6 @@ func readStructures(fset *token.FileSet, file *ast.File, pkg *Package) error {
 		}
 
 		stru := &Struct{Name: o.Name}
-		pkg.Structures = append(pkg.Structures, stru)
 
 		for _, structField := range structType.Fields.List {
 			if len(structField.Names) == 0 {
@@ -113,6 +112,10 @@ func readStructures(fset *token.FileSet, file *ast.File, pkg *Package) error {
 			}
 			stru.Fields = append(stru.Fields, field)
 		}
+
+		if len(stru.Fields) > 0 {
+			pkg.Structures = append(pkg.Structures, stru)
+		}
 	}
 
 	return nil
@@ -122,6 +125,7 @@ func readFieldType(fieldType ast.Expr, field *Field) error {
 	switch tp := fieldType.(type) {
 	case *ast.Ident:
 		field.KindName = tp.Name
+		field.PrimitiveType = primitiveType(tp)
 	case *ast.ArrayType:
 		field.Slice = true
 		return readFieldType(tp.Elt, field)
@@ -140,15 +144,43 @@ func readFieldType(fieldType ast.Expr, field *Field) error {
 	return nil
 }
 
-func getStructType(o *ast.Object) *ast.StructType {
-	typeSpec, ok := o.Decl.(*ast.TypeSpec)
+func primitiveType(f *ast.Ident) string {
+	if f == nil || f.Obj == nil || f.Obj.Decl == nil {
+		return ""
+	}
+
+	typeSpec, ok := f.Obj.Decl.(*ast.TypeSpec)
 	if !ok {
+		return ""
+	}
+
+	ident, ok := typeSpec.Type.(*ast.Ident)
+	if !ok {
+		return ""
+	}
+
+	return ident.Name
+}
+
+func getStructType(o *ast.Object) *ast.StructType {
+	if o == nil || o.Decl == nil {
 		return nil
 	}
 
-	structType := typeSpec.Type.(*ast.StructType)
-	if !ok {
+	typeSpec, ok := o.Decl.(*ast.TypeSpec)
+	if !ok || typeSpec.Type == nil {
 		return nil
 	}
-	return structType
+
+	structType, ok := typeSpec.Type.(*ast.StructType)
+	if ok {
+		return structType
+	}
+
+	ident, ok := typeSpec.Type.(*ast.Ident)
+	if !ok || ident.Obj == nil {
+		return nil
+	}
+
+	return getStructType(ident.Obj)
 }

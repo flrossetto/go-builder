@@ -66,8 +66,22 @@ func sliceType(field Field) (tp string) {
 	return
 }
 
+func realType(field Field) string {
+	switch strings.ToLower(field.PrimitiveType) {
+	case
+		"bool",
+		"int", "int8", "int16", "int32", "int64", "uint", "uint8", "uint16", "uint32", "uint64", "uintptr",
+		"float32", "float64",
+		"complex64", "complex128",
+		"string":
+		return field.PrimitiveType
+	default:
+		return field.KindName
+	}
+}
+
 func isBasicType(field Field) bool {
-	switch strings.ToLower(field.KindName) {
+	switch strings.ToLower(realType(field)) {
 	case
 		"bool",
 		"int", "int8", "int16", "int32", "int64", "uint", "uint8", "uint16", "uint32", "uint64", "uintptr",
@@ -79,6 +93,7 @@ func isBasicType(field Field) bool {
 		return false
 	}
 }
+
 func emptyValue(field Field) (tp string) {
 	if field.Pointer {
 		return "nil"
@@ -88,13 +103,21 @@ func emptyValue(field Field) (tp string) {
 		return fieldType(field) + "{}"
 	}
 
-	switch strings.ToLower(field.KindName) {
+	switch strings.ToLower(realType(field)) {
 	case "bool":
 		return "false"
 	case "int", "int8", "int16", "int32", "int64", "uint", "uint8", "uint16", "uint32", "uint64", "uintptr", "float32", "float64", "complex64", "complex128":
-		return "0"
+		if field.PrimitiveType == "" {
+			return "0"
+		}
+
+		return field.KindName + "(0)"
 	case "string":
-		return `""`
+		if field.PrimitiveType == "" {
+			return `""`
+		}
+
+		return field.KindName + `("")`
 	}
 
 	return "nil"

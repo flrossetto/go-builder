@@ -13,11 +13,12 @@ type Struct struct {
 }
 
 type Field struct {
-	Name     string
-	Pointer  bool
-	Slice    bool
-	KindName string
-	KindPkg  string
+	Name          string
+	Pointer       bool
+	Slice         bool
+	KindName      string
+	KindPkg       string
+	PrimitiveType string
 }
 
 type StructFunc struct {
