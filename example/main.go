@@ -21,6 +21,13 @@ type Email struct {
 	Address   AddressType
 	EmailType EmailType
 	Types     []EmailType
+	Interface interface{}
+	Map1      map[string]string
+	Map2      map[string]Address
+	Map3      map[string]*Address
+	Map4      map[*Address]*Address
+	Map5      map[interface{}]interface{}
+	Map6      *map[interface{}]interface{}
 }
 
 func (e *Email) GetName() string {

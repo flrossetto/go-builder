@@ -121,8 +121,8 @@ func readStructures(fset *token.FileSet, file *ast.File, pkg *Package) error {
 	return nil
 }
 
-func readFieldType(fieldType ast.Expr, field *Field) error {
-	switch tp := fieldType.(type) {
+func readFieldType(expr ast.Expr, field *Field) error {
+	switch tp := expr.(type) {
 	case *ast.Ident:
 		field.KindName = tp.Name
 		field.PrimitiveType = primitiveType(tp)
@@ -137,6 +137,20 @@ func readFieldType(fieldType ast.Expr, field *Field) error {
 			field.KindPkg = x.Name
 		}
 		field.KindName = tp.Sel.Name
+	case *ast.InterfaceType:
+		field.Interface = true
+	case *ast.MapType:
+		var key Field
+		if err := readFieldType(tp.Key, &key); err != nil {
+			return err
+		}
+
+		var value Field
+		if err := readFieldType(tp.Value, &value); err != nil {
+			return err
+		}
+
+		field.KindName = fmt.Sprintf("map[%s]%s", fieldType(key), fieldType(value))
 	default:
 		return fmt.Errorf("field type unknow: %T", fieldType)
 	}

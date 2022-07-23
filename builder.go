@@ -37,6 +37,10 @@ func createBuilder(pkg *Package) ([]byte, error) {
 }
 
 func fieldType(field Field) (tp string) {
+	if field.Interface {
+		return "interface{}"
+	}
+
 	if field.Slice {
 		tp = "[]"
 	}
@@ -95,7 +99,7 @@ func isBasicType(field Field) bool {
 }
 
 func emptyValue(field Field) (tp string) {
-	if field.Pointer {
+	if field.Pointer || field.Interface {
 		return "nil"
 	}
 

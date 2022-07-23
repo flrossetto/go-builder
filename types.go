@@ -16,6 +16,7 @@ type Field struct {
 	Name          string
 	Pointer       bool
 	Slice         bool
+	Interface     bool
 	KindName      string
 	KindPkg       string
 	PrimitiveType string

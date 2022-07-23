@@ -63,6 +63,246 @@ func (a *User) GetName() string {
 	return a.Name
 }
 
+type EmailBuilder struct {
+	xName      string
+	xAddress   AddressType
+	xEmailType EmailType
+	xTypes     []EmailType
+	xInterface interface{}
+	xMap1      map[string]string
+	xMap2      map[string]Address
+	xMap3      map[string]*Address
+	xMap4      map[*Address]*Address
+	xMap5      map[interface{}]interface{}
+	xMap6      *map[interface{}]interface{}
+}
+
+func NewEmailBuilder() *EmailBuilder {
+	return &EmailBuilder{}
+}
+
+func NewEmailBuilderFrom(a interface{}) *EmailBuilder {
+	var b EmailBuilder
+	_ = copier.Copy(&b, a)
+	return &b
+}
+
+func (b *EmailBuilder) LoadValues(a interface{}) *EmailBuilder {
+	_ = copier.Copy(b, a)
+	return b
+}
+
+func (b *EmailBuilder) Name(v string) *EmailBuilder {
+	b.xName = v
+	return b
+}
+
+func (b *EmailBuilder) Address(v AddressType) *EmailBuilder {
+	b.xAddress = v
+	return b
+}
+
+func (b *EmailBuilder) EmailType(v EmailType) *EmailBuilder {
+	b.xEmailType = v
+	return b
+}
+
+func (b *EmailBuilder) Types(v []EmailType) *EmailBuilder {
+	b.xTypes = v
+	return b
+}
+
+func (b *EmailBuilder) ClearTypes() *EmailBuilder {
+	b.xTypes = []EmailType{}
+	return b
+}
+
+func (b *EmailBuilder) AddType(value EmailType) *EmailBuilder {
+	b.xTypes = append(b.xTypes, value)
+	return b
+}
+
+func (b *EmailBuilder) ForEachType(f func(EmailType) EmailType) *EmailBuilder {
+	list := make([]EmailType, 0, len(b.xTypes))
+	for _, item := range b.xTypes {
+		list = append(list, f(item))
+	}
+	b.xTypes = list
+	return b
+}
+
+func (b *EmailBuilder) Interface(v interface{}) *EmailBuilder {
+	b.xInterface = v
+	return b
+}
+
+func (b *EmailBuilder) InterfaceFunc(f func(interface{}) interface{}) *EmailBuilder {
+	b.xInterface = f(b.xInterface)
+	return b
+}
+
+func (b *EmailBuilder) Map1(v map[string]string) *EmailBuilder {
+	b.xMap1 = v
+	return b
+}
+
+func (b *EmailBuilder) Map1Func(f func(map[string]string) map[string]string) *EmailBuilder {
+	b.xMap1 = f(b.xMap1)
+	return b
+}
+
+func (b *EmailBuilder) Map2(v map[string]Address) *EmailBuilder {
+	b.xMap2 = v
+	return b
+}
+
+func (b *EmailBuilder) Map2Func(f func(map[string]Address) map[string]Address) *EmailBuilder {
+	b.xMap2 = f(b.xMap2)
+	return b
+}
+
+func (b *EmailBuilder) Map3(v map[string]*Address) *EmailBuilder {
+	b.xMap3 = v
+	return b
+}
+
+func (b *EmailBuilder) Map3Func(f func(map[string]*Address) map[string]*Address) *EmailBuilder {
+	b.xMap3 = f(b.xMap3)
+	return b
+}
+
+func (b *EmailBuilder) Map4(v map[*Address]*Address) *EmailBuilder {
+	b.xMap4 = v
+	return b
+}
+
+func (b *EmailBuilder) Map4Func(f func(map[*Address]*Address) map[*Address]*Address) *EmailBuilder {
+	b.xMap4 = f(b.xMap4)
+	return b
+}
+
+func (b *EmailBuilder) Map5(v map[interface{}]interface{}) *EmailBuilder {
+	b.xMap5 = v
+	return b
+}
+
+func (b *EmailBuilder) Map5Func(f func(map[interface{}]interface{}) map[interface{}]interface{}) *EmailBuilder {
+	b.xMap5 = f(b.xMap5)
+	return b
+}
+
+func (b *EmailBuilder) Map6(v *map[interface{}]interface{}) *EmailBuilder {
+	b.xMap6 = v
+	return b
+}
+
+func (b *EmailBuilder) Map6Func(f func(*map[interface{}]interface{}) *map[interface{}]interface{}) *EmailBuilder {
+	b.xMap6 = f(b.xMap6)
+	return b
+}
+
+func (b *EmailBuilder) Build() *Email {
+	return &Email{
+		Name:      b.xName,
+		Address:   b.xAddress,
+		EmailType: b.xEmailType,
+		Types:     b.xTypes,
+		Interface: b.xInterface,
+		Map1:      b.xMap1,
+		Map2:      b.xMap2,
+		Map3:      b.xMap3,
+		Map4:      b.xMap4,
+		Map5:      b.xMap5,
+		Map6:      b.xMap6,
+	}
+}
+
+func (a *Email) ToBuilder() *EmailBuilder {
+	return &EmailBuilder{
+		xName:      a.Name,
+		xAddress:   a.Address,
+		xEmailType: a.EmailType,
+		xTypes:     a.Types,
+		xInterface: a.Interface,
+		xMap1:      a.Map1,
+		xMap2:      a.Map2,
+		xMap3:      a.Map3,
+		xMap4:      a.Map4,
+		xMap5:      a.Map5,
+		xMap6:      a.Map6,
+	}
+}
+
+func (a *Email) GetAddress() AddressType {
+	if a == nil {
+		return AddressType("")
+	}
+	return a.Address
+}
+
+func (a *Email) GetEmailType() EmailType {
+	if a == nil {
+		return EmailType(0)
+	}
+	return a.EmailType
+}
+
+func (a *Email) GetTypes() []EmailType {
+	if a == nil {
+		return []EmailType{}
+	}
+	return a.Types
+}
+
+func (a *Email) GetInterface() interface{} {
+	if a == nil {
+		return nil
+	}
+	return a.Interface
+}
+
+func (a *Email) GetMap1() map[string]string {
+	if a == nil {
+		return map[string]string{}
+	}
+	return a.Map1
+}
+
+func (a *Email) GetMap2() map[string]Address {
+	if a == nil {
+		return map[string]Address{}
+	}
+	return a.Map2
+}
+
+func (a *Email) GetMap3() map[string]*Address {
+	if a == nil {
+		return map[string]*Address{}
+	}
+	return a.Map3
+}
+
+func (a *Email) GetMap4() map[*Address]*Address {
+	if a == nil {
+		return map[*Address]*Address{}
+	}
+	return a.Map4
+}
+
+func (a *Email) GetMap5() map[interface{}]interface{} {
+	if a == nil {
+		return map[interface{}]interface{}{}
+	}
+	return a.Map5
+}
+
+func (a *Email) GetMap6() *map[interface{}]interface{} {
+	if a == nil {
+		return nil
+	}
+	return a.Map6
+}
+
 type AddressBuilder struct {
 	xStreet string
 	xNumber int
@@ -231,106 +471,6 @@ func (a *Person) GetEmails() []*Email {
 		return nil
 	}
 	return a.Emails
-}
-
-type EmailBuilder struct {
-	xName      string
-	xAddress   AddressType
-	xEmailType EmailType
-	xTypes     []EmailType
-}
-
-func NewEmailBuilder() *EmailBuilder {
-	return &EmailBuilder{}
-}
-
-func NewEmailBuilderFrom(a interface{}) *EmailBuilder {
-	var b EmailBuilder
-	_ = copier.Copy(&b, a)
-	return &b
-}
-
-func (b *EmailBuilder) LoadValues(a interface{}) *EmailBuilder {
-	_ = copier.Copy(b, a)
-	return b
-}
-
-func (b *EmailBuilder) Name(v string) *EmailBuilder {
-	b.xName = v
-	return b
-}
-
-func (b *EmailBuilder) Address(v AddressType) *EmailBuilder {
-	b.xAddress = v
-	return b
-}
-
-func (b *EmailBuilder) EmailType(v EmailType) *EmailBuilder {
-	b.xEmailType = v
-	return b
-}
-
-func (b *EmailBuilder) Types(v []EmailType) *EmailBuilder {
-	b.xTypes = v
-	return b
-}
-
-func (b *EmailBuilder) ClearTypes() *EmailBuilder {
-	b.xTypes = []EmailType{}
-	return b
-}
-
-func (b *EmailBuilder) AddType(value EmailType) *EmailBuilder {
-	b.xTypes = append(b.xTypes, value)
-	return b
-}
-
-func (b *EmailBuilder) ForEachType(f func(EmailType) EmailType) *EmailBuilder {
-	list := make([]EmailType, 0, len(b.xTypes))
-	for _, item := range b.xTypes {
-		list = append(list, f(item))
-	}
-	b.xTypes = list
-	return b
-}
-
-func (b *EmailBuilder) Build() *Email {
-	return &Email{
-		Name:      b.xName,
-		Address:   b.xAddress,
-		EmailType: b.xEmailType,
-		Types:     b.xTypes,
-	}
-}
-
-func (a *Email) ToBuilder() *EmailBuilder {
-	return &EmailBuilder{
-		xName:      a.Name,
-		xAddress:   a.Address,
-		xEmailType: a.EmailType,
-		xTypes:     a.Types,
-	}
-}
-
-func (a *Email) GetAddress() AddressType {
-	if a == nil {
-		return AddressType("")
-	}
-	return a.Address
-}
-
-func (a *Email) GetEmailType() EmailType {
-	if a == nil {
-		return EmailType(0)
-	}
-	return a.EmailType
-}
-
-func (a *Email) GetTypes() []EmailType {
-	if a == nil {
-		return []EmailType{}
-	}
-	return a.Types
 }
 
 type PersonAddressBuilder struct {
