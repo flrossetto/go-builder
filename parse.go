@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-func readAllFile(dir string) (*Package, error) {
+func readAllFile(dir string, structures []string) (*Package, error) {
 	dirFiles, err := ioutil.ReadDir(dir)
 	if err != nil {
 		return nil, err
@@ -55,7 +55,7 @@ loopFile:
 	}
 
 	for _, ff := range files {
-		if err := readStructures(fset, ff, &pkg); err != nil {
+		if err := readStructures(fset, ff, structures, &pkg); err != nil {
 			return nil, err
 		}
 	}
@@ -92,7 +92,7 @@ func readFuncs(fset *token.FileSet, file *ast.File, pkg *Package) error {
 	return nil
 }
 
-func readStructures(fset *token.FileSet, file *ast.File, pkg *Package) error {
+func readStructures(fset *token.FileSet, file *ast.File, structures []string, pkg *Package) error {
 	for _, o := range file.Scope.Objects {
 		structType := getStructType(o)
 		if structType == nil {
@@ -100,6 +100,9 @@ func readStructures(fset *token.FileSet, file *ast.File, pkg *Package) error {
 		}
 
 		stru := &Struct{Name: o.Name}
+		if len(structures) > 0 && !stringInSlice(stru.Name, structures) {
+			continue
+		}
 
 		for _, structField := range structType.Fields.List {
 			if len(structField.Names) == 0 {
@@ -197,4 +200,13 @@ func getStructType(o *ast.Object) *ast.StructType {
 	}
 
 	return getStructType(ident.Obj)
+}
+
+func stringInSlice(value string, list []string) bool {
+	for _, item := range list {
+		if value == item {
+			return true
+		}
+	}
+	return false
 }

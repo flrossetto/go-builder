@@ -17,7 +17,9 @@ func main() {
 	flag.StringVar(&outFile, "out", path.Join(dir, "go-builder.go"), "")
 	flag.Parse()
 
-	pkg, err := readAllFile(dir)
+	structures := flag.Args()
+
+	pkg, err := readAllFile(dir, structures)
 	if err != nil {
 		panic(err)
 	}

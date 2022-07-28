@@ -5,6 +5,64 @@ package main
 
 import "github.com/jinzhu/copier"
 
+type AddressBuilder struct {
+	xStreet string
+	xNumber int
+}
+
+func NewAddressBuilder() *AddressBuilder {
+	return &AddressBuilder{}
+}
+
+func NewAddressBuilderFrom(a interface{}) *AddressBuilder {
+	var b AddressBuilder
+	_ = copier.Copy(&b, a)
+	return &b
+}
+
+func (b *AddressBuilder) LoadValues(a interface{}) *AddressBuilder {
+	_ = copier.Copy(b, a)
+	return b
+}
+
+func (b *AddressBuilder) Street(v string) *AddressBuilder {
+	b.xStreet = v
+	return b
+}
+
+func (b *AddressBuilder) Number(v int) *AddressBuilder {
+	b.xNumber = v
+	return b
+}
+
+func (b *AddressBuilder) Build() *Address {
+	return &Address{
+		Street: b.xStreet,
+		Number: b.xNumber,
+	}
+}
+
+func (a *Address) ToBuilder() *AddressBuilder {
+	return &AddressBuilder{
+		xStreet: a.Street,
+		xNumber: a.Number,
+	}
+}
+
+func (a *Address) GetStreet() string {
+	if a == nil {
+		return ""
+	}
+	return a.Street
+}
+
+func (a *Address) GetNumber() int {
+	if a == nil {
+		return 0
+	}
+	return a.Number
+}
+
 type UserBuilder struct {
 	xID   int64
 	xName string
@@ -61,6 +119,64 @@ func (a *User) GetName() string {
 		return ""
 	}
 	return a.Name
+}
+
+type PersonAddressBuilder struct {
+	xStreet string
+	xNumber int
+}
+
+func NewPersonAddressBuilder() *PersonAddressBuilder {
+	return &PersonAddressBuilder{}
+}
+
+func NewPersonAddressBuilderFrom(a interface{}) *PersonAddressBuilder {
+	var b PersonAddressBuilder
+	_ = copier.Copy(&b, a)
+	return &b
+}
+
+func (b *PersonAddressBuilder) LoadValues(a interface{}) *PersonAddressBuilder {
+	_ = copier.Copy(b, a)
+	return b
+}
+
+func (b *PersonAddressBuilder) Street(v string) *PersonAddressBuilder {
+	b.xStreet = v
+	return b
+}
+
+func (b *PersonAddressBuilder) Number(v int) *PersonAddressBuilder {
+	b.xNumber = v
+	return b
+}
+
+func (b *PersonAddressBuilder) Build() *PersonAddress {
+	return &PersonAddress{
+		Street: b.xStreet,
+		Number: b.xNumber,
+	}
+}
+
+func (a *PersonAddress) ToBuilder() *PersonAddressBuilder {
+	return &PersonAddressBuilder{
+		xStreet: a.Street,
+		xNumber: a.Number,
+	}
+}
+
+func (a *PersonAddress) GetStreet() string {
+	if a == nil {
+		return ""
+	}
+	return a.Street
+}
+
+func (a *PersonAddress) GetNumber() int {
+	if a == nil {
+		return 0
+	}
+	return a.Number
 }
 
 type EmailBuilder struct {
@@ -303,64 +419,6 @@ func (a *Email) GetMap6() *map[interface{}]interface{} {
 	return a.Map6
 }
 
-type AddressBuilder struct {
-	xStreet string
-	xNumber int
-}
-
-func NewAddressBuilder() *AddressBuilder {
-	return &AddressBuilder{}
-}
-
-func NewAddressBuilderFrom(a interface{}) *AddressBuilder {
-	var b AddressBuilder
-	_ = copier.Copy(&b, a)
-	return &b
-}
-
-func (b *AddressBuilder) LoadValues(a interface{}) *AddressBuilder {
-	_ = copier.Copy(b, a)
-	return b
-}
-
-func (b *AddressBuilder) Street(v string) *AddressBuilder {
-	b.xStreet = v
-	return b
-}
-
-func (b *AddressBuilder) Number(v int) *AddressBuilder {
-	b.xNumber = v
-	return b
-}
-
-func (b *AddressBuilder) Build() *Address {
-	return &Address{
-		Street: b.xStreet,
-		Number: b.xNumber,
-	}
-}
-
-func (a *Address) ToBuilder() *AddressBuilder {
-	return &AddressBuilder{
-		xStreet: a.Street,
-		xNumber: a.Number,
-	}
-}
-
-func (a *Address) GetStreet() string {
-	if a == nil {
-		return ""
-	}
-	return a.Street
-}
-
-func (a *Address) GetNumber() int {
-	if a == nil {
-		return 0
-	}
-	return a.Number
-}
-
 type PersonBuilder struct {
 	xID      int64
 	xName    string
@@ -471,62 +529,4 @@ func (a *Person) GetEmails() []*Email {
 		return nil
 	}
 	return a.Emails
-}
-
-type PersonAddressBuilder struct {
-	xStreet string
-	xNumber int
-}
-
-func NewPersonAddressBuilder() *PersonAddressBuilder {
-	return &PersonAddressBuilder{}
-}
-
-func NewPersonAddressBuilderFrom(a interface{}) *PersonAddressBuilder {
-	var b PersonAddressBuilder
-	_ = copier.Copy(&b, a)
-	return &b
-}
-
-func (b *PersonAddressBuilder) LoadValues(a interface{}) *PersonAddressBuilder {
-	_ = copier.Copy(b, a)
-	return b
-}
-
-func (b *PersonAddressBuilder) Street(v string) *PersonAddressBuilder {
-	b.xStreet = v
-	return b
-}
-
-func (b *PersonAddressBuilder) Number(v int) *PersonAddressBuilder {
-	b.xNumber = v
-	return b
-}
-
-func (b *PersonAddressBuilder) Build() *PersonAddress {
-	return &PersonAddress{
-		Street: b.xStreet,
-		Number: b.xNumber,
-	}
-}
-
-func (a *PersonAddress) ToBuilder() *PersonAddressBuilder {
-	return &PersonAddressBuilder{
-		xStreet: a.Street,
-		xNumber: a.Number,
-	}
-}
-
-func (a *PersonAddress) GetStreet() string {
-	if a == nil {
-		return ""
-	}
-	return a.Street
-}
-
-func (a *PersonAddress) GetNumber() int {
-	if a == nil {
-		return 0
-	}
-	return a.Number
 }
