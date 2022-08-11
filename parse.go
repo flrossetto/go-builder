@@ -7,6 +7,7 @@ import (
 	"go/token"
 	"io/ioutil"
 	"path"
+	"sort"
 	"strings"
 )
 
@@ -59,6 +60,10 @@ loopFile:
 			return nil, err
 		}
 	}
+
+	sort.SliceStable(pkg.Structures, func(i, j int) bool {
+		return strings.Compare(pkg.Structures[i].Name, pkg.Structures[j].Name) < 0
+	})
 
 	return &pkg, nil
 }
