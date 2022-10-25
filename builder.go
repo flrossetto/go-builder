@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"fmt"
 	"strings"
 	"text/template"
 
@@ -54,6 +55,11 @@ func fieldType(field Field) (tp string) {
 	}
 
 	tp += field.KindName
+
+	if field.Generic != nil {
+		return fmt.Sprintf("%s[%s]", tp, fieldType(*field.Generic))
+	}
+
 	return
 }
 
@@ -67,6 +73,11 @@ func sliceType(field Field) (tp string) {
 	}
 
 	tp += field.KindName
+
+	if field.Generic != nil {
+		return fmt.Sprintf("%s[%s]", tp, fieldType(*field.Generic))
+	}
+
 	return
 }
 

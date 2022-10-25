@@ -140,6 +140,14 @@ func readFieldType(expr ast.Expr, field *Field) error {
 	case *ast.StarExpr:
 		field.Pointer = true
 		return readFieldType(tp.X, field)
+	case *ast.IndexExpr:
+		field.Generic = &Field{}
+
+		if err := readFieldType(tp.Index, field.Generic); err != nil {
+			return err
+		}
+
+		return readFieldType(tp.X, field)
 	case *ast.SelectorExpr:
 		if x, ok := tp.X.(*ast.Ident); ok {
 			field.KindPkg = x.Name
@@ -147,6 +155,7 @@ func readFieldType(expr ast.Expr, field *Field) error {
 		field.KindName = tp.Sel.Name
 	case *ast.InterfaceType:
 		field.Interface = true
+
 	case *ast.MapType:
 		var key Field
 		if err := readFieldType(tp.Key, &key); err != nil {

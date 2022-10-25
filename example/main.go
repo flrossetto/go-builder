@@ -3,6 +3,8 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+
+	"github.com/flrossetto/go-builder/example/types"
 )
 
 type AddressType string
@@ -16,6 +18,10 @@ const (
 
 type EmptyStruct struct{}
 
+type AnyValue[T any] struct {
+	Value T
+}
+
 type Email struct {
 	Name      string
 	Address   AddressType
@@ -28,6 +34,11 @@ type Email struct {
 	Map4      map[*Address]*Address
 	Map5      map[interface{}]interface{}
 	Map6      *map[interface{}]interface{}
+	Generic1  AnyValue[EmptyStruct]
+	Generic2  []AnyValue[EmptyStruct]
+	Generic3  AnyValue[[]EmptyStruct]
+	Generic4  AnyValue[[]*map[interface{}]interface{}]
+	Generic5  types.Values[types.Value]
 }
 
 func (e *Email) GetName() string {

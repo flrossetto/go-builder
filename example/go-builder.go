@@ -3,7 +3,10 @@
 
 package main
 
-import "github.com/jinzhu/copier"
+import (
+	"github.com/flrossetto/go-builder/example/types"
+	"github.com/jinzhu/copier"
+)
 
 type EmailBuilder struct {
 	xName      string
@@ -17,6 +20,11 @@ type EmailBuilder struct {
 	xMap4      map[*Address]*Address
 	xMap5      map[interface{}]interface{}
 	xMap6      *map[interface{}]interface{}
+	xGeneric1  AnyValue[EmptyStruct]
+	xGeneric2  []AnyValue[EmptyStruct]
+	xGeneric3  AnyValue[[]EmptyStruct]
+	xGeneric4  AnyValue[[]*map[interface{}]interface{}]
+	xGeneric5  types.Values[types.Value]
 }
 
 func NewEmailBuilder() *EmailBuilder {
@@ -143,6 +151,70 @@ func (b *EmailBuilder) Map6Func(f func(*map[interface{}]interface{}) *map[interf
 	return b
 }
 
+func (b *EmailBuilder) Generic1(v AnyValue[EmptyStruct]) *EmailBuilder {
+	b.xGeneric1 = v
+	return b
+}
+
+func (b *EmailBuilder) Generic1Func(f func(AnyValue[EmptyStruct]) AnyValue[EmptyStruct]) *EmailBuilder {
+	b.xGeneric1 = f(b.xGeneric1)
+	return b
+}
+
+func (b *EmailBuilder) Generic2(v []AnyValue[EmptyStruct]) *EmailBuilder {
+	b.xGeneric2 = v
+	return b
+}
+
+func (b *EmailBuilder) ClearGeneric2() *EmailBuilder {
+	b.xGeneric2 = []AnyValue[EmptyStruct]{}
+	return b
+}
+
+func (b *EmailBuilder) AddGeneric2(value AnyValue[EmptyStruct]) *EmailBuilder {
+	b.xGeneric2 = append(b.xGeneric2, value)
+	return b
+}
+
+func (b *EmailBuilder) ForEachGeneric2(f func(AnyValue[EmptyStruct]) AnyValue[EmptyStruct]) *EmailBuilder {
+	list := make([]AnyValue[EmptyStruct], 0, len(b.xGeneric2))
+	for _, item := range b.xGeneric2 {
+		list = append(list, f(item))
+	}
+	b.xGeneric2 = list
+	return b
+}
+
+func (b *EmailBuilder) Generic3(v AnyValue[[]EmptyStruct]) *EmailBuilder {
+	b.xGeneric3 = v
+	return b
+}
+
+func (b *EmailBuilder) Generic3Func(f func(AnyValue[[]EmptyStruct]) AnyValue[[]EmptyStruct]) *EmailBuilder {
+	b.xGeneric3 = f(b.xGeneric3)
+	return b
+}
+
+func (b *EmailBuilder) Generic4(v AnyValue[[]*map[interface{}]interface{}]) *EmailBuilder {
+	b.xGeneric4 = v
+	return b
+}
+
+func (b *EmailBuilder) Generic4Func(f func(AnyValue[[]*map[interface{}]interface{}]) AnyValue[[]*map[interface{}]interface{}]) *EmailBuilder {
+	b.xGeneric4 = f(b.xGeneric4)
+	return b
+}
+
+func (b *EmailBuilder) Generic5(v types.Values[types.Value]) *EmailBuilder {
+	b.xGeneric5 = v
+	return b
+}
+
+func (b *EmailBuilder) Generic5Func(f func(types.Values[types.Value]) types.Values[types.Value]) *EmailBuilder {
+	b.xGeneric5 = f(b.xGeneric5)
+	return b
+}
+
 func (b *EmailBuilder) Build() *Email {
 	return &Email{
 		Name:      b.xName,
@@ -156,6 +228,11 @@ func (b *EmailBuilder) Build() *Email {
 		Map4:      b.xMap4,
 		Map5:      b.xMap5,
 		Map6:      b.xMap6,
+		Generic1:  b.xGeneric1,
+		Generic2:  b.xGeneric2,
+		Generic3:  b.xGeneric3,
+		Generic4:  b.xGeneric4,
+		Generic5:  b.xGeneric5,
 	}
 }
 
@@ -172,6 +249,11 @@ func (a *Email) ToBuilder() *EmailBuilder {
 		xMap4:      a.Map4,
 		xMap5:      a.Map5,
 		xMap6:      a.Map6,
+		xGeneric1:  a.Generic1,
+		xGeneric2:  a.Generic2,
+		xGeneric3:  a.Generic3,
+		xGeneric4:  a.Generic4,
+		xGeneric5:  a.Generic5,
 	}
 }
 
@@ -243,6 +325,41 @@ func (a *Email) GetMap6() *map[interface{}]interface{} {
 		return nil
 	}
 	return a.Map6
+}
+
+func (a *Email) GetGeneric1() AnyValue[EmptyStruct] {
+	if a == nil {
+		return AnyValue[EmptyStruct]{}
+	}
+	return a.Generic1
+}
+
+func (a *Email) GetGeneric2() []AnyValue[EmptyStruct] {
+	if a == nil {
+		return []AnyValue[EmptyStruct]{}
+	}
+	return a.Generic2
+}
+
+func (a *Email) GetGeneric3() AnyValue[[]EmptyStruct] {
+	if a == nil {
+		return AnyValue[[]EmptyStruct]{}
+	}
+	return a.Generic3
+}
+
+func (a *Email) GetGeneric4() AnyValue[[]*map[interface{}]interface{}] {
+	if a == nil {
+		return AnyValue[[]*map[interface{}]interface{}]{}
+	}
+	return a.Generic4
+}
+
+func (a *Email) GetGeneric5() types.Values[types.Value] {
+	if a == nil {
+		return types.Values[types.Value]{}
+	}
+	return a.Generic5
 }
 
 type PersonBuilder struct {

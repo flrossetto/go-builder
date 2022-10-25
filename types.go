@@ -9,7 +9,7 @@ type Package struct {
 
 type Struct struct {
 	Name   string
-	Fields []*Field
+	Fields []interface{}
 }
 
 type Field struct {
@@ -20,6 +20,7 @@ type Field struct {
 	KindName      string
 	KindPkg       string
 	PrimitiveType string
+	Generic       *Field
 }
 
 type StructFunc struct {
